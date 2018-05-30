@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+	<title>My Programming Web Apps Project</title>
+	<h2>Web Apps Game</h2>
+
+<canvas id="gameCanvas" width=800 height="600"> </canvas>
+
+<script>
+//set up canvas
+var canvas;
+var canvasContext;
+//set up squares coordinates and speed control
+var ballX = 50;
+var ballSpeedX = 10;
+var ballY = 150;
+var ballSpeedY = 4;
+var radius = 10;
+
+var ball2X = 50;
+var ballSpeed2X =10;
+var ball2Y = 150;
+var ballSpeed2Y = 4;
+var radius = 10;
+
+
+//set up paddle dimensions and position
+var paddle1Y = 50;
+var paddle2Y = 250;
+const PADDLE_THICKNESS = 50;
+const PADDLE_HEIGHT = 100;
+
+var paddle3Y = 100;
+var paddle4Y = 300;
+
+
+window.onload = function() {
+	   canvas = document.getElementById('gameCanvas');
+	   canvasContext = canvas.getContext('2d');
+	   
+	   var framesPerSecond = 30;
+	   setInterval(callEverything, 1000/framesPerSecond);
+	   
+	   canvas.addEventListener('mousemove', function(evt) {
+	   		var mousePos = calculateMousePos(evt);
+	   		paddle1Y = mousePos.Y - (PADDLE_HEIGHT/2);
+	   });
+}
+
+//calculate Mouse Position
+function calculateMousePos(evt) {
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return {
+		X: mouseX,
+		Y: mouseY
+	};
+}
+	   
+//reset ball if it hits the wall
+function ballReset() {
+	ballSpeedX = -ballSpeedX;
+	ballX = canvas.width/2;
+	ballY = canvas.height/2;
+}//end ballReset
+
+//computer moves the "computer" paddle
+function computerMovement() {
+	var paddle2YCenter = paddle2Y + (PADDLE_HEIGHT/2);
+	if(paddle2YCenter < ballY - 35) {
+	paddle2Y = paddle2Y + 6;
+	} else if(paddle2YCenter > ballY + 35) {
+	paddle2Y = paddle2Y - 6;
+	}
+}
+
+function callEverything() {
+	moveEverything();
+	drawEverything();
+}
+
+function moveEverything() {
+computerMovement();
+
+if(ballX - radius < 0) {
+	if(ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
+	ballSpeed = -ballSpeedX;
+	} else { 
+	ballReset();
+	}
+}
+if(ballX + radius > canvas.width) {
+	if(ballY > paddle2Y &&
+	ballY < paddle2Y + PADDLE_HEIGHT){
+	ballSpeedX = -ballSpeedX;
+	} else {
+	ballReset();
+	}
+}
+	if(ballY < 0) {
+		ballSpeedY  = -ballSpeedY;
+	}
+	if(ballY > canvas.height) {
+		ballSpeedY = -ballSpeedY;
+	}
+	
+	ballX = ballX + ballSpeedX;
+	ballY = ballY + ballSpeedY;
+	
+	
+
+}//end MoveEverything
+	
+function drawEverything()
+{
+	   
+	   // next line blanks out the screen with black
+	   canvasContext.fillStyle='dodgerblue';
+	   canvasContext.fillRect(0,0,canvas.width,canvas.height);
+	   
+	   //this is left player paddle
+	   canvasContext.fillStyle ='black';
+	   canvasContext.fillRect(0,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT);
+	   
+	   //this is left player paddle
+	   canvasContext.fillStyle ='white';
+	   canvasContext.fillRect(50,paddle3Y,PADDLE_THICKNESS,PADDLE_HEIGHT);
+	   
+	   //this is right computer paddle
+	   canvasContext.fillStyle='black';
+	   canvasContext.fillRect(canvas.width-PADDLE_THICKNESS, paddle2Y,PADDLE_THICKNESS,PADDLE_HEIGHT);
+	   
+	   //this is right computer paddle
+	   canvasContext.fillStyle='white';
+	   canvasContext.fillRect(canvas.width-PADDLE_THICKNESS, paddle4Y,PADDLE_THICKNESS,PADDLE_HEIGHT); 
+	   
+	   
+	   
+	  //next line draws the ball
+	   canvasContext.fillStyle ='yellow';
+	   canvasContext.beginPath();
+	   canvasContext.arc(ballX, ballY, radius,0,Math.PI*2,true);
+	   canvasContext.fill();
+	   //next line draws the ball
+	   canvasContext.fillStyle ='red';
+	   canvasContext.beginPath();
+	   canvasContext.arc(ballX, ballY+20, radius,0,Math.PI*2,true);
+	   canvasContext.fill();
+	   //next line draws the ball
+	   canvasContext.fillStyle ='green';
+	   canvasContext.beginPath();
+	   canvasContext.arc(ballX, ballY+50, radius,0,Math.PI*2,true);
+	   canvasContext.fill();
+	   canvasContext.fillStyle ='pink';
+	   canvasContext.beginPath();
+	   canvasContext.arc(ballX, ballY+70, radius,0,Math.PI*2,true);
+	   canvasContext.fill();
+	   canvasContext.fillStyle ='orange';
+	   canvasContext.beginPath();
+	   canvasContext.arc(ballX, ballY+90, radius,0,Math.PI*2,true);
+	   canvasContext.fill();
+
+
+ 	
+}
+
+
+</script>
+</html>
